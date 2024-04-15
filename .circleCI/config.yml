@@ -12,8 +12,8 @@ jobs:
     steps: 
       - checkout 
       - node/install-packages: 
-        pkg-manager: npm 
-      - run: |
+          pkg-manager: npm 
+      - run : |
         echo "Installing dependencies..."
         npm install 
   test: 
@@ -22,7 +22,7 @@ jobs:
     steps: 
       - checkout
       - node/install-packages: 
-        pkg-manager: npm 
+          pkg-manager: npm 
       - run: |
         echo "Running tests..."
         npm run test
