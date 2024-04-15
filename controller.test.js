@@ -7,7 +7,7 @@ describe("the print function", ()=>{
         jest.clearAllMocks();
     })
 
-    it("should respond with 'Hello world!'", ()=>{
+    it("should respond with 'Hello world!'", ()=>{ // test name
         const mockReq = {};
         const mockRes = {
             send:jest.fn()
@@ -17,3 +17,6 @@ describe("the print function", ()=>{
         expect(mockRes.send).toHaveBeenCalledWith("Hello world!!"); // If you change this value, the test will fail.
     })
 })
+
+// after npm install, npm test to run this 
+// must match controller .js 

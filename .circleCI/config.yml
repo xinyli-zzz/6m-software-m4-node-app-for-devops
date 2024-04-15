@@ -1,0 +1,39 @@
+version: 2.1
+# orbs - reusable packages for use 
+# in yml files, tabs are impt, so must align and tab properly
+orbs: 
+  node: circleci/node@5.0.1
+  docker: circleci/docker@2.1.4
+# jobs - set of instructions / functions 
+jobs: 
+  build: #job name 
+    docker: #environment
+      - image: cimg/node:16.10
+    steps: 
+      - checkout 
+      - node/install-packages: 
+        pkg-manager: npm 
+      - run: 
+        echo "Installing dependencies..."
+        npm install 
+  test: 
+    docker: 
+      - image: cimg/node: 16.10
+    steps: 
+      - checkout
+      - node/install-packages: 
+        pkg-manager: npm 
+      - run:
+        echo "Running tests..."
+        npm run test
+
+# workflow - defines what sequence the jobs will run
+workflos: 
+  simple_workflow: #workflow name 
+  jobs: 
+    - build #Step 1 
+    - test  #Step 2
+      requries: 
+        - build #test has a requiremnet that build must finish before we can go to the build job 
+
+
