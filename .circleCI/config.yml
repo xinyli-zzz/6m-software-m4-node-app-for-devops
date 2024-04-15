@@ -32,8 +32,9 @@ workflos:
   simple_workflow: #workflow name 
   jobs: 
     - build #Step 1 
-    - test  #Step 2
-      requries: 
+    - test:  #Step 2
+      requires: 
         - build #test has a requiremnet that build must finish before we can go to the build job 
+
 
 
