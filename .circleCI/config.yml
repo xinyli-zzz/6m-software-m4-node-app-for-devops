@@ -27,6 +27,18 @@ jobs:
       - run: |
         echo "Running tests..."
         npm run test
+  
+  publish:  #just a naming convention, also known as build-and-push
+    executor: docker/docker #define the execution environment in which the steps of a job will run
+    steps: 
+      - setup_remote_docker
+      - checkout
+      - docker/check 
+      - docker/build: #build the image 
+          image: xinyu98/education-space
+      - docker/push: 
+          image: xinyu98/education-space
+
 
 # workflow - defines what sequence the jobs will run
 workflows: 
@@ -36,6 +48,8 @@ workflows:
     - test:  #Step 2
       requires: 
         - build #test has a requiremnet that build must finish before we can go to the build job 
-
+    - publish: 
+      requires: 
+        - test #publish requires test to finish 
 
 
