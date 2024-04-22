@@ -75,7 +75,7 @@ jobs:
 workflows: 
   simple_workflow: #workflow name 
     jobs: 
-      - build #Step 1 
+      - build: #Step 1 
         #additional filters
           filters: 
             branches: 
