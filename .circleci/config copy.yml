@@ -67,7 +67,7 @@ jobs:
       - run: docker build -t $IMAGE_NAME  . #$_IMAGE_NAME gets the valie from the env we created above
       - snyk/scan: 
           docker-image-name: $IMAGE_NAME 
-
+          
 
 
 
@@ -76,18 +76,6 @@ workflows:
   simple_workflow: #workflow name 
     jobs: 
       - build #Step 1 
-        #additional filters
-          filters: 
-            branches: 
-              only: main #the build job would only run when code changes are pushed to the main branch. 
-            # The scan job 
-      - scan:
-          requires:
-            - build
-          filters:
-            branches:
-              only: main
-
       - test:  #Step 2
           requires: 
             - build #test has a requirement that build must finish before we can go to the build job 
