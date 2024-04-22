@@ -42,19 +42,19 @@ jobs:
       - docker/push: 
           image: xinyu98/education-space
           tags: v1.0.1
-  deploy:  #pushes code to heroku and release, then can access the link (open app) and see the result 
-    docker: 
-      - image: cimg/node:16.10
-    steps: 
-      - setup_remote_docker
-      - heroku/install
-      - checkout 
-      - run: 
-          name: Heroku Container Push
-          command: |
-          heroku container:login
-          heroku container: push web -a terence-su-devops
-          heroku container: release web -a terence-su-devops
+  # deploy:  #pushes code to heroku and release, then can access the link (open app) and see the result 
+  #   docker: 
+  #     - image: cimg/node:16.10
+  #   steps: 
+  #     - setup_remote_docker
+  #     - heroku/install
+  #     - checkout 
+  #     - run: 
+  #         name: Heroku Container Push
+  #         command: |
+  #         heroku container:login
+  #         heroku container: push web -a terence-su-devops
+  #         heroku container: release web -a terence-su-devops
   scan: 
     docker: 
       - image: cimg/node:16.20
