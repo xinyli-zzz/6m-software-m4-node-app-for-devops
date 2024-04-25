@@ -1,0 +1,105 @@
+version: 2.1
+# orbs - reusable packages for use 
+# in yml files, tabs are important, so must align and tab properly
+orbs: 
+  node: circleci/node@5.0.1
+  docker: circleci/docker@2.1.4
+  snyk: snyk/snyk@1.5.0
+
+# jobs - set of instructions / functions 
+jobs: 
+  build: #job name 
+    docker: #environment
+      - image: cimg/node:16.10
+    steps: 
+      - checkout 
+      - node/install-packages: 
+          pkg-manager: npm 
+      - run: |
+          echo "Installing dependencies..."
+          npm install 
+
+  test: 
+    docker: 
+      - image: cimg/node:16.10
+    steps: 
+      - checkout
+      - node/install-packages: 
+          pkg-manager: npm 
+      - run: |
+          echo "Running tests..."
+          npm run test
+
+  publish:  
+    executor: docker/docker
+    steps: 
+      - setup_remote_docker
+      - checkout
+      - docker/check 
+      - docker/build: 
+          image: xinyu98/education-space
+          tags: v1.0.1
+      - docker/push: 
+          image: xinyu98/education-space
+          tags: v1.0.1
+
+  # deploy:  
+  #   docker: 
+  #     - image: cimg/node:16.10
+  #   steps: 
+  #     - setup_remote_docker
+  #     - heroku/install
+  #     - checkout 
+  #     - run: 
+  #         name: Heroku Container Push
+  #         command: |
+  #         heroku container:login
+  #         heroku container: push web -a xxx
+  #         heroku container: release web -a xxx
+
+  scan: 
+    docker: 
+      - image: cimg/node:16.20
+    environment: 
+      IMAGE_NAME: xinyu98/education-space 
+    steps: 
+      - checkout 
+      - setup_remote_docker 
+      - docker/check 
+      - run: docker build -t $IMAGE_NAME  . 
+      - snyk/scan: 
+          docker-image-name: $IMAGE_NAME 
+
+# workflow - defines what sequence the jobs will run
+workflows:
+  version: 2
+  build_and_publish:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: main
+      - test:
+          requires:
+            - build 
+          filters:
+            branches:
+              only: main
+      - publish:
+          requires:
+            - test
+          filters:
+            branches:
+              only: release
+      # - deploy:
+      #     requires:
+      #       - publish
+      #     filters:
+      #       branches:
+      #         only: release
+      - scan:
+          requires:
+            - build
+          filters:
+            branches:
+              only: main
